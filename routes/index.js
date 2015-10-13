@@ -3,20 +3,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  // res.render('index', { title: 'Friend App' });
-    res.json({
-        status: 200,
-        data: {
-            getVerb: 'success'
-        }
-    });
+    res.render('index.ejs', {});
 });
 
 router.post('/', function(req, res) {
-   res.json({
-      status: 200,
-      data: {}
-   });
+    res.json({
+        status: 200,
+        data: {
+            postVerb: 'success'
+        }
+    });
 });
 
 router.patch('/', function(req, res) {

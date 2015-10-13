@@ -15,22 +15,7 @@ var usersSchema = mongoose.Schema({
 		thumb: String
 	},
 	status: Number,
-	logins: [{
-		at: Date,
-		duration: Number,
-		location: {
-			city: String,
-			state: String,
-			country: String,
-			zip_code: String
-		},
-		platform: {
-			name: String,
-			type: {
-				type: String
-			}
-		}
-	}]
+	logins: Array
 });
 
-module.exports = mongoose.model('Users', usersSchema);
+module.exports = mongoose.model('Users', usersSchema, 'users');
