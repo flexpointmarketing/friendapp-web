@@ -9,7 +9,12 @@ var gulp = require('gulp'),
 	reactify = require('reactify');
 	
 gulp.task('default', ['browser-sync'], function () {
+	// gulp.watch("public/jsx/*.jsx", ['bundle'])	
+	// gulp.watch("public/jsx/components/*.jsx", ['bundle']);
+	gulp.watch("public/jsx/*.jsx", ['bundle']);
+	gulp.watch("public/jsx/components/*.jsx", ['bundle']);
 	
+	// gulp.watch("public/js/*.js").on('change', browserSync.reload);
 });
 
 gulp.task('bundle', function() {
@@ -23,7 +28,7 @@ gulp.task('bundle', function() {
 	.pipe(gulp.dest('./public/js'));
 });
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', ['bundle', 'nodemon'], function() {
 	browserSync.init(null, {
 		proxy: "http://localhost:3000",
         files: [
@@ -39,7 +44,8 @@ gulp.task('nodemon', function (cb) {
 	var started = false;
 	
 	return nodemon({
-		script: 'bin/www'
+		script: 'bin/www',
+		ignore: ["public/*"]
 	}).on('start', function () {
 		// to avoid nodemon being started multiple times
 		if (!started) {
@@ -48,3 +54,19 @@ gulp.task('nodemon', function (cb) {
 		} 
 	});
 });
+
+// gulp.task('live-server', function() {
+// 	var server = new LiveServer('bin/www');
+// 	server.start();
+// });
+
+// gulp.task('serve', ['bundle', 'live-server'], function() {
+// 	browserSync.init(null, {
+// 		proxy: "http://localhost:3000",
+//         files: [
+// 			"public/**/*.*",
+// 			"views/*.*"
+// 		],
+//         port: 8000,
+// 	});
+// });

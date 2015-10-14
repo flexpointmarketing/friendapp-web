@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var UserItem = require('./UserItem.jsx');	
+var UserListAddItem = require('./UserListAddItem.jsx');
 
 module.exports = React.createClass({
 	render: function() {
@@ -13,6 +14,7 @@ module.exports = React.createClass({
 						)	
 					})}
 				</ul>
+				<UserListAddItem />
 			</div>
 		)
 	}
