@@ -1,35 +1,85 @@
-var mongoose = require('mongoose');
-
-var gameDataSchema = mongoose.Schema({
+var mongoose = require('mongoose'),
+	Schema = mongoose.Schema,
+	ObjectId = Schema.ObjectId;
+	
+var gameDataSchema = new Schema({
 	lives: {
-		current: Number,
-		max: Number
+		current: {
+			type: Number,
+			default: 5
+		},
+		max: {
+			type: Number,
+			default: 5
+		}
 	},
-	coins: Number,
+	coins: {
+		type: Number,
+		default: 0
+	},
 	powerups: {
-		bombs: Number,
-		change: Number,
-		show: Number
+		bombs: {
+			type: Number,
+			default: 0
+		},
+		change: {
+			type: Number,
+			default: 0
+		},
+		show: {
+			type: Number,
+			default: 0
+		}
 	},
 	questions: {
-		prepared_questions: Array,
-		custom_questions: Array
+		prepared_questions: {
+			type: Array,
+			default: []
+		},
+		custom_questions: {
+			type: Array,
+			default: []
+		}
 	},
-	list_of_friends: Array,
-	notifications: Array,
+	list_of_friends: {
+		type: Array,
+		default: []
+	},
+	notifications: {
+		type: Array,
+		default: []
+	},
 	challenges: {
 		incoming: {
-			pending: Array,
-			completed: Array
+			pending: {
+				type: Array,
+				default: []
+			},
+			completed: {
+				type: Array,
+				default: []
+			}
 		},
 		outgoing: {
-			pending: Array,
-			completed: Array
+			pending: {
+				type: Array,
+				default: []
+			},
+			completed: {
+				type: Array,
+				default: []
+			}
 		}
 	},
 	settings: {
-		app_notifications_only: Boolean,
-		game_sounds: Boolean
+		app_notifications_only: {
+			type: Boolean,
+			default: 1
+		},
+		game_sounds: {
+			type: Boolean,
+			default: 1
+		}
 	},
 	user_id: ObjectId
 });

@@ -14,13 +14,17 @@ var db = mongoose.connect('mongodb://localhost/stea_friendapp');
 /**
  * Models
  */
+var Questions = require('./models/questions');
+var QuizSets = require('./models/quiz-sets');
+var Statistics = require('./models/statistics');
 var Users = require('./models/users');
+var GameData = require('./models/users-gdata');
 
 /**
  * Routes modules
  */
 var routes = require('./routes/index');
-var iosApiUsers = require('./routes/api/ios/users')(Users);
+var iosApiUsers = require('./routes/api/ios/users')(Questions, Users, GameData);
 
 var app = express();
 
