@@ -25,6 +25,7 @@ var GameData = require('./models/users-gdata');
  */
 var routes = require('./routes/index');
 var iosApiUsers = require('./routes/api/ios/users')(Questions, Users, GameData);
+var iosApiQuestions = require('./routes/api/ios/questions')(Questions);
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/ios/users', iosApiUsers);
+app.use('/api/ios/questions', iosApiQuestions);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

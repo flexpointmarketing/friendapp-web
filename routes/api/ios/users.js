@@ -1,6 +1,6 @@
 var express = require('express');
 
-var routes = function(Questions, Users, GameData) {
+var routes = function(Users, GameData) {
 	var apiRouter = express.Router();
 	
 	apiRouter.route('/')
@@ -55,11 +55,6 @@ var routes = function(Questions, Users, GameData) {
 					res.send(gameData);
 				}
 			});
-		});
-	
-	apiRouter.route('/app/prepared-questions')
-		.post(function(req, res) {
-			res.json({});
 		});
 	
 	return apiRouter;
