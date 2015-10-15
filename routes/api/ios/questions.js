@@ -10,7 +10,7 @@ var routes = function(Questions) {
 					res.status(500).send(err);
 				} else if (questions) {
 					res.status(200);
-					res.send(questions);
+					res.send({data: questions});
 				}
 			})
 		})
