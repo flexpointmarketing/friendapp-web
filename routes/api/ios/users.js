@@ -12,6 +12,7 @@ var routes = function(Users, GameData) {
 				if (err) {
 					res.status(500).send(err);
 				} else if (user) {
+					
 					res.status(200);
 					res.send(user);
 				} else {

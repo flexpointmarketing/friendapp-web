@@ -1,7 +1,22 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	ObjectId = Schema.ObjectId;
-	
+
+var pQuestionsSchema = new Schema({
+	qid: ObjectId,
+	answer: String
+}, { _id: false });
+
+var cQuestionsSchema = new Schema({
+	qid: {
+		type: ObjectId,
+		default: mongoose.Types.ObjectId()
+	},
+	question: String,
+	answer: String,
+	options: Array
+}, { _id: false });
+
 var gameDataSchema = new Schema({
 	lives: {
 		current: {
@@ -32,14 +47,8 @@ var gameDataSchema = new Schema({
 		}
 	},
 	questions: {
-		prepared_questions: {
-			type: Array,
-			default: []
-		},
-		custom_questions: {
-			type: Array,
-			default: []
-		}
+		prepared_questions: [ pQuestionsSchema ],
+		custom_questions: [ cQuestionsSchema ]
 	},
 	list_of_friends: {
 		type: Array,
