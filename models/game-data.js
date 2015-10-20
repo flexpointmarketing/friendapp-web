@@ -17,6 +17,11 @@ var cQuestionsSchema = new Schema({
 	options: Array
 }, { _id: false });
 
+var listOfFriendsSchema = new Schema({
+	fbid: String,
+	is_notify: Boolean
+}, { _id: false });
+
 var gameDataSchema = new Schema({
 	lives: {
 		current: {
@@ -50,10 +55,7 @@ var gameDataSchema = new Schema({
 		prepared_questions: [ pQuestionsSchema ],
 		custom_questions: [ cQuestionsSchema ]
 	},
-	list_of_friends: {
-		type: Array,
-		default: []
-	},
+	list_of_friends: [ listOfFriendsSchema ],
 	notifications: {
 		type: Array,
 		default: []

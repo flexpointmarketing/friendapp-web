@@ -66,7 +66,7 @@ var GameData = require('./models/game-data');
 var routes = require('./routes/index');
 var iosApiUsersRoutes = require('./routes/api/ios/users')(Users, GameData);
 var iosApiQuestionsRoutes = require('./routes/api/ios/questions')(Questions);
-var iosApiGameDataRoutes = require('./routes/api/ios/game-data')(GameData);
+var iosApiGameDataRoutes = require('./routes/api/ios/game-data')(Questions, Users, GameData);
 
 app.use('/', routes);
 app.use('/api/ios/users', iosApiUsersRoutes);
