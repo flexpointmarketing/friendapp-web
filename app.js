@@ -66,12 +66,14 @@ var GameData = require('./models/game-data');
 var routes = require('./routes/index');
 var iosApiUsersRoutes = require('./routes/api/ios/users')(Users, GameData);
 var iosApiQuestionsRoutes = require('./routes/api/ios/questions')(Questions);
-var iosApiGameDataRoutes = require('./routes/api/ios/game-data')(Questions, Users, GameData);
+var iosApiGameDataRoutes = require('./routes/api/ios/game-data')(Users, GameData);
+var iosApiStatsGameRoutes = require('./routes/api/ios/stats-game')(Statistics, QuizSets, GameData);
 
 app.use('/', routes);
 app.use('/api/ios/users', iosApiUsersRoutes);
 app.use('/api/ios/questions', iosApiQuestionsRoutes);
 app.use('/api/ios/game-data', iosApiGameDataRoutes);
+app.use('/api/ios/stats-game', iosApiStatsGameRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

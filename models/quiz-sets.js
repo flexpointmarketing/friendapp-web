@@ -1,9 +1,16 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
 	ObjectId = Schema.ObjectId;
-	
+
+var questionsSchema = new Schema({
+	qid: ObjectId,
+	type: {
+		type: String
+	}
+}, { _id: false });
+
 var model = new Schema({
-	questions: Array,
+	questions: [ questionsSchema ],
 	stat_id: ObjectId
 });
 

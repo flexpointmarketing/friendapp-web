@@ -22,6 +22,22 @@ var listOfFriendsSchema = new Schema({
 	is_notify: Boolean
 }, { _id: false });
 
+var incomingChallengesSchema = new Schema({
+	sid: ObjectId,
+	status: {
+		type: Number,
+		default: 0
+	}
+}, { _id: false });
+
+var outgoingChallengesSchema = new Schema({
+	sid: ObjectId,
+	status: {
+		type: Number,
+		default: 0
+	}
+}, { _id: false });
+
 var gameDataSchema = new Schema({
 	lives: {
 		current: {
@@ -52,44 +68,23 @@ var gameDataSchema = new Schema({
 		}
 	},
 	questions: {
-		prepared_questions: [ pQuestionsSchema ],
-		custom_questions: [ cQuestionsSchema ]
+		prepared: [ pQuestionsSchema ],
+		custom: [ cQuestionsSchema ]
 	},
 	list_of_friends: [ listOfFriendsSchema ],
-	notifications: {
-		type: Array,
-		default: []
-	},
+	notifications: [ ],
 	challenges: {
-		incoming: {
-			pending: {
-				type: Array,
-				default: []
-			},
-			completed: {
-				type: Array,
-				default: []
-			}
-		},
-		outgoing: {
-			pending: {
-				type: Array,
-				default: []
-			},
-			completed: {
-				type: Array,
-				default: []
-			}
-		}
+		incoming: [ incomingChallengesSchema ],
+		outgoing: [ outgoingChallengesSchema ]
 	},
 	settings: {
 		app_notifications_only: {
 			type: Boolean,
-			default: 1
+			default: true
 		},
 		game_sounds: {
 			type: Boolean,
-			default: 1
+			default: true
 		}
 	},
 	user_id: ObjectId
