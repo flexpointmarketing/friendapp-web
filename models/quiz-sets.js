@@ -11,7 +11,7 @@ var questionsSchema = new Schema({
 
 var model = new Schema({
 	questions: [ questionsSchema ],
-	stat_id: ObjectId
+	stats_id: ObjectId
 });
 
 module.exports = mongoose.model('QuizSets', model, 'quiz_sets');
