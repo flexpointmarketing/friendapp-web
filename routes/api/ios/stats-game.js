@@ -58,6 +58,19 @@ var routes = function(Statistics, QuizSets, GameData) {
 			}
 		});
 	
+	apiRouter.route('/quiz-set/:setId')
+		.get(function(req, res) {
+			QuizSets.findById(req.params.setId, function(err, quiz) {
+				if (err) {
+					res.status(503).send(err);
+				} else if (quiz) {
+					res.status(200).send(quiz);
+				} else {
+					res.status(404).send('quiz set not found');
+				}
+			});
+		});
+	
 	apiRouter.route('/quiz-sets/:userId')
 		.get(function(req, res) {
 			var oData = {};
