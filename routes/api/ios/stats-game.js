@@ -1,7 +1,13 @@
 var express = require('express');
 
 var routes = function(Statistics, QuizSets, GameData) {
+	'use strict';
+	
 	var apiRouter = express.Router();
+
+	var counter = function(cur, total) {
+		return cur == total;
+	}
 
 	apiRouter.route('/')
 		.post(function(req, res) {
@@ -18,8 +24,6 @@ var routes = function(Statistics, QuizSets, GameData) {
 						
 						// save quiz sets
 						var qsets = new QuizSets(sets);
-						
-						console.log(sets);
 						
 						qsets.save(function(err) {
 							if (!err) {
@@ -58,13 +62,89 @@ var routes = function(Statistics, QuizSets, GameData) {
 			}
 		});
 	
-	apiRouter.route('/quiz-set/:setId')
+	apiRouter.route('/quiz-set/')
 		.get(function(req, res) {
-			QuizSets.findById(req.params.setId, function(err, quiz) {
+			QuizSets.findById(req.query.setId, function(err, quiz) {
 				if (err) {
 					res.status(503).send(err);
 				} else if (quiz) {
-					res.status(200).send(quiz);
+					var data = {};
+					
+					data._id = quiz._id;
+					data._stats_id = quiz.stats_id;	
+					data.questions = [];
+					data.extra = {};
+					data.extra.prepared = [];
+					data.extra.custom = [];
+					
+					GameData.findOne(
+						{ 'user_id': req.query.senderId },
+						'_id user_id questions',
+						function(err, user) {
+							if (err) {
+								res.status(503).send(err);
+							} else if (user) {
+								var pq = user.questions.prepared,
+									cq = user.questions.custom;
+								
+								quiz.questions.forEach(function(val, x) {
+									var o = {};
+									o.qid = val.qid;
+									o.type = val.type;
+									
+									if (val.type == 'custom') {
+										cq.every(function(a, b) {
+											if (a.qid.toString() == val.qid.toString()) {
+												
+												o.question = a.question;
+												o.answer = a.answer;
+												o.options = a.options;
+												data.questions.push(o);
+												
+												cq.splice(b, 1);
+												
+												return false;
+											} else {
+												return true;
+											}
+										});
+										
+									} else if (val.type == 'prepared') {								
+										pq.every(function(a, b) {
+										
+											if (a.qid.toString() == val.qid.toString()) {
+												
+												o.answer = a.answer;
+												data.questions.push(o);
+	
+												pq.splice(b, 1);
+	
+												return false;
+											} else {
+												return true;
+											}
+										});
+										
+									} else {
+										console.log('no type');
+									}
+								});
+								
+								cq.forEach(function(val) {
+									data.extra.custom.push(val);
+								});
+								
+								pq.forEach(function(val) {
+									data.extra.prepared.push(val);
+								});
+								
+								res.status(200).send(data);
+								
+							} else {
+								res.status(404).send('user not found');
+							}
+						}
+					);
 				} else {
 					res.status(404).send('quiz set not found');
 				}
@@ -135,7 +215,6 @@ var routes = function(Statistics, QuizSets, GameData) {
 												
 												oData.sets.incoming.forEach(function(a, b) {
 													stats.forEach(function(x, y) {
-														console.log(x._id);
 														if (a.stats_id.toString() == x._id.toString()) {
 															iRet['sid'] = a._id;
 															iRet['stats_id'] = x._id;
@@ -174,10 +253,49 @@ var routes = function(Statistics, QuizSets, GameData) {
 				)
 			}
 		});
-	
-	apiRouter.route('/quiz-sets/outgoing/:userId')
+		
+	apiRouter.route('/statistics/:statId')
 		.get(function(req, res) {
+			Statistics.findById(req.params.statId, function(err, data) {
+				if (err) {
+					res.status(503).send(err);
+				} else if (data) {
+					res.status(200).send(data);
+				} else {
+					res.status(404).send('statistics not found');
+				}
+			});
+		})
+		.patch(function(req, res) {
+			var o = req.body;
+			console.log(o);
 			
+			var query = {
+				'_id': req.params.statId,
+				'receivers.rid': o.rid
+			};
+			
+			var update = {
+				$set: {
+					'receivers.$.status': o.status,
+					'receivers.$.powerups': o.powerups
+				},
+				$push: {
+					'receivers.$.results': {
+						$each: o.results
+					}	
+				}
+			}
+			
+			Statistics.findOneAndUpdate(query, update, { new: true}, function(err, stat) {
+				if (err) {
+					res.status(503).send(err);
+				} else if (stat) {
+					res.status(201).send(stat);
+				} else {
+					res.status(404).send('stat id not found');
+				}
+			});
 		});
 		
 	return apiRouter;
