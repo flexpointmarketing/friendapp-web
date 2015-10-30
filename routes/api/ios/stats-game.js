@@ -220,6 +220,16 @@ var routes = function(Statistics, QuizSets, GameData) {
 															iRet['stats_id'] = x._id;
 															iRet['sender'] = x.sender;
 															
+															user.challenges.incoming.every(function(p, q) {
+																if (p.sid.toString() == a._id.toString()) {
+																	iRet['status'] = p.status;
+																	
+																	return false;
+																} else {
+																	return true;
+																}
+															});
+															
 															oRetData.sets.incoming.push(iRet);
 															iRet = {};
 														}
@@ -232,6 +242,16 @@ var routes = function(Statistics, QuizSets, GameData) {
 															oRet['sid'] = a._id;
 															oRet['stats_id'] = x._id;
 															oRet['receivers'] = x.receivers;
+															
+															user.challenges.outgoing.every(function(p, q) {
+																if (p.sid.toString() == a._id.toString()) {
+																	iRet['status'] = p.status;
+																	
+																	return false;
+																} else {
+																	return true;
+																}
+															});
 															
 															oRetData.sets.outgoing.push(oRet);
 															oRet = {};
@@ -268,7 +288,6 @@ var routes = function(Statistics, QuizSets, GameData) {
 		})
 		.patch(function(req, res) {
 			var o = req.body;
-			console.log(o);
 			
 			var query = {
 				'_id': req.params.statId,
@@ -287,11 +306,30 @@ var routes = function(Statistics, QuizSets, GameData) {
 				}
 			}
 			
-			Statistics.findOneAndUpdate(query, update, { new: true}, function(err, stat) {
+			Statistics.findOneAndUpdate(query, update, function(err, stat) {
 				if (err) {
 					res.status(503).send(err);
 				} else if (stat) {
-					res.status(201).send(stat);
+					var q = { 'user_id': o.rid, 'challenges.incoming.sid': o.set_id };
+					var u = { $set: { 'challenges.incoming.$.status': 1 } };
+					var q2 = { '_id': req.params.statId, 'receivers.status': 0 };
+	
+					GameData.findOneAndUpdate(q, u, function(err, data) {});
+	
+					Statistics.find(q2, function(err, items) {			
+						if (err) {
+							res.status(503).send(err);
+						} else {					
+							var q3 = { 'user_id': o.sender_id, 'challenges.outgoing.sid': o.set_id };
+							var u3 = { $set: { 'challenges.outgoing.$.status': 1 }};
+							
+							if (items.length == 0) {
+								GameData.findOneAndUpdate(q3, u3, function(err, data) {});	
+							}
+						}
+					});
+					
+					res.status(201).send(stat);	
 				} else {
 					res.status(404).send('stat id not found');
 				}
