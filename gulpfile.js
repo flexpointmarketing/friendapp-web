@@ -11,8 +11,8 @@ var gulp = require('gulp'),
 gulp.task('default', ['browser-sync'], function () {
 	// gulp.watch("public/jsx/*.jsx", ['bundle'])	
 	// gulp.watch("public/jsx/components/*.jsx", ['bundle']);
-	gulp.watch("public/jsx/*.jsx", ['bundle']);
-	gulp.watch("public/jsx/components/*.jsx", ['bundle']);
+	// gulp.watch("public/jsx/*.jsx", ['bundle']);
+	// gulp.watch("public/jsx/components/*.jsx", ['bundle']);
 	
 	// gulp.watch("public/js/*.js").on('change', browserSync.reload);
 });
@@ -28,7 +28,7 @@ gulp.task('bundle', function() {
 	.pipe(gulp.dest('./public/js'));
 });
 
-gulp.task('browser-sync', ['bundle', 'nodemon'], function() {
+gulp.task('browser-sync', ['nodemon'], function() {
 	browserSync.init(null, {
 		proxy: "http://localhost:3000",
         files: [
@@ -44,8 +44,8 @@ gulp.task('nodemon', function (cb) {
 	var started = false;
 	
 	return nodemon({
-		script: 'bin/www',
-		ignore: ["public/*"]
+		// ignore: ["public/*"],
+		script: 'bin/www'
 	}).on('start', function () {
 		// to avoid nodemon being started multiple times
 		if (!started) {

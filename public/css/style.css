@@ -1,18 +1,157 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: yellow;
+  background-color: #fff;
 }
 
-h1 {
-    color: green;
+div#friendapp {
+    height: 700px;
+    min-height: 700px;
+    box-sizing: boder-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
 }
 
-a {
-  color: #00B7FF;
+div.frapp-container {
+    background: url(../img/container-tile-bg.jpg) #2e3239;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 700px;
+    min-height: 700px;
+    overflow-y: hidden;
+    border-bottom: 0;
 }
 
-.strikethrough {
-    text-decoration: line-through;
-    color: slategray;
+.main-container {
+    position: relative;
+    z-index: 5;
+    max-width: 760px;
+    min-width: 420px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.preloader-container {
+    position: relative;
+    top: 50%;
+    /*display: block;*/
+    display: none;
+    width: 80px;
+    margin: 0 auto;
+    text-align: center;
+    -webkit-transform: translate(0,-50%);
+    -ms-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+}
+
+.preloader-container .loader {
+    margin-bottom: 5px;
+}
+
+.loader {
+    width: 80px;
+    height: 80px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 70% auto;
+    border-radius: 100px;
+    outline: 1px solid transparent;
+    -webkit-animation: spinner 5s infinite;
+    animation: spinner 5s infinite;
+}
+
+header.header {
+    background-color: #f3f3f3;
+    border-bottom: none;
+}
+
+header .row {
+    margin: 0;
+}
+
+header .logo-column {
+    float: left;
+    width: 38.3333336%;
+}
+
+header h1 {
+    margin: 4px 0 0;
+    line-height: 46px;
+    text-indent: -9999em;
+    background: url(../img/logo.png) no-repeat;
+}
+
+header .menu-column {
+    float: right;
+    width: 59.6666667%;
+}
+
+header .profile-h {
+    position: relative;
+}
+
+header .avatar {
+    float: left;
+    width: 42px;
+    height: 42px;
+    margin-top: 4px;
+}
+
+.avatar > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+}
+
+header .profile-h h4, header .profile-h small {
+    position: absolute;
+    left: 50px;
+    width: 150px;
+    margin: 0;
+    /*overflow: hidden;*/
+    font-size: 15px;
+    line-height: 130%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+header .profile-h h4 {
+    top: 6px;
+    color: #333;
+}
+
+header .profile-h small {
+    top: 24px;
+    color: #999;
+}
+
+header .btns-menu {
+    margin-top: 8px;
+}
+
+header .btns-menu button {
+    padding: 6px 8px 3px;
+}
+
+header .btns-menu button > span {
+    font-size: 20px;
+}
+
+/* Main Section */
+
+.main-container[role="main"] {
+    position: relative;
+    height: 100%;
+    padding-top: 50px;
+    overflow: hidden;
+    background: #222a30;
+}
+
+.main-container[role="main"] .master-content {
+    position: relative;
+    height: 100%;
 }

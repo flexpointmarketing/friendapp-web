@@ -1,38 +1,17 @@
 var express = require('express');
-var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res) {
-    // res.render('index.ejs', {});
-    // console.log(req);
-    res.json('Cookie Generated!');
-});
+var routes = function(Users) {
+    var router = express.Router();
+    
+    router.route('/')
+        .get(function(req, res) {
+            res.render('index', {});
+        })
+        .post(function(req ,res) {
+            res.render('index', {});
+        });
+   
+    return router;
+}
 
-router.post('/', function(req, res) {
-    res.json({
-        status: 200,
-        data: {
-            postVerb: 'success'
-        }
-    });
-});
-
-router.patch('/', function(req, res) {
-   res.json({
-       status: 200,
-       data: {
-           patch: 'success'
-       } 
-   });
-});
-
-router.delete('/', function(req, res) {
-    res.json({
-        status: 200,
-        data: {
-            deleteVerb: 'success'
-        }
-    }) 
-});
-
-module.exports = router;
+module.exports = routes;
