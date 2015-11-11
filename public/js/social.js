@@ -1,4 +1,13 @@
 var friendCache = {};
+var preloader = $('div.preloader-container');
+
+function onShow() {
+	preloader.fadeIn(500);
+}
+
+function onHide() {
+	preloader.fadeOut(500);
+}
 
 function login(callback) {
 	FB.login(callback, {

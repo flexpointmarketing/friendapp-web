@@ -38,9 +38,8 @@ div.frapp-container {
 .preloader-container {
     position: relative;
     top: 50%;
-    /*display: block;*/
     display: none;
-    width: 80px;
+    width: 100px;
     margin: 0 auto;
     text-align: center;
     -webkit-transform: translate(0,-50%);
@@ -53,8 +52,8 @@ div.frapp-container {
 }
 
 .loader {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 70% auto;
@@ -62,6 +61,20 @@ div.frapp-container {
     outline: 1px solid transparent;
     -webkit-animation: spinner 5s infinite;
     animation: spinner 5s infinite;
+}
+
+.preloader-container .loader > div.loader-icon {
+    background: url('../img/balls.gif') no-repeat center center;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.preloader-container .percentage {
+    font-weight: bold;
+    font-size: 20px;
+    color: #fff;
+    display: none;
 }
 
 header.header {
