@@ -26,15 +26,24 @@ if ( typeof Object.create !== 'function' ) {
 			console.log(data);
 
 			var self = this;
-			self.data = data;
-			self.uData = {};
-			self.pQuestions = [];
+			self.data = data; // data from FB api
+			self.uData = {}; // init user data object
+			self.pQuestions = []; // init prepared questions
 			self.baseAU = "https://stupideasygames.com/friendapp/api/web/";
 			self.appHeader = $('div.frapp-container header.header');
-			
+			self.bindEvents();
+
 			self.getPreparedQuestions().then(function(res) {
 				self.pQuestions = res;
 				self.processData(self);
+			});
+		},
+
+		bindEvents: function() {
+			var self = this;
+
+			$(window).on('hashchange', function() {
+				self.render(window.location.hash);
 			});
 		},
 
@@ -118,6 +127,7 @@ if ( typeof Object.create !== 'function' ) {
 			async4.then(function(res) {
 				console.log(self.uData);
 				console.log(self.pQuestions);
+				window.location.hash = '#welcome';
 				$.publish( 'friendapp/gameLoaderOff');
 			});
 		},
@@ -205,6 +215,23 @@ if ( typeof Object.create !== 'function' ) {
 				dataType: 'json',
 				data: JSON.stringify(o)
 			}).promise();
+		},
+
+		render: function(hash) {
+			var temp = hash.split('/')[0];
+
+			var	map = {
+				'#welcome': function() {
+					var el = $('div.page-container');
+
+					el.fadeIn(500);
+					el.find('.welcome').delay(500).slideDown(500);
+				}
+			}
+
+			if (map[temp]) {
+				map[temp]();
+			}
 		}
 	}
 	
