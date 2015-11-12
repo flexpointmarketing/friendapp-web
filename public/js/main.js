@@ -29,13 +29,18 @@ if ( typeof Object.create !== 'function' ) {
 			self.data = data; // data from FB api
 			self.uData = {}; // init user data object
 			self.pQuestions = []; // init prepared questions
+			self.templates = {}; // init empty templates
 			self.baseAU = "https://stupideasygames.com/friendapp/api/web/";
 			self.appHeader = $('div.frapp-container header.header');
 			self.bindEvents();
+			
+			$.when(self.getTemplates(self)).then(function() {
+				console.log(self.templates);
 
-			self.getPreparedQuestions().then(function(res) {
-				self.pQuestions = res;
-				self.processData(self);
+				self.getPreparedQuestions().then(function(res) {
+					self.pQuestions = res;
+					self.processData(self);
+				});
 			});
 		},
 
@@ -45,6 +50,40 @@ if ( typeof Object.create !== 'function' ) {
 			$(window).on('hashchange', function() {
 				self.render(window.location.hash);
 			});
+		},
+
+		getTemplates: function(self) {
+			var x = new $.Deferred();
+
+			function ajax1() {
+				return $.ajax({
+					url: 'public/js/templates/welcome.hbs',
+					type: 'GET',
+					dataType: 'html',
+					success: function (data) {
+						var template = Handlebars.compile(data);
+						self.templates.welcome = template({
+							name: self.data.me.first_name
+						});
+					},
+				});
+			}
+
+			function ajax2() {
+				return $.ajax({
+					url: 'public/js/templates/welcome.hbs',
+					type: 'GET',
+					dataType: 'html',
+					success: function (data) {
+						var template = Handlebars.compile(data);
+						self.templates.welcome2 = template({
+							name: self.data.me.first_name
+						});
+					},
+				});
+			}
+
+			return $.when(ajax1(), ajax2());
 		},
 
 		getUData: function(data) {
@@ -157,19 +196,19 @@ if ( typeof Object.create !== 'function' ) {
 			var self = this;
 
 			var o = {
-			    name: {
-			        first: self.data.me.first_name,
-			        last: self.data.me.last_name
-			    },
-			    username: {
-			        email: self.data.me.email,
-			        uid: self.data.me.id,
-			        type: 'facebook'
-			    },
-			    image: {
-			        original: self.data.me.picture.data.url,
-			        thumb: self.data.me.picture.data.url 
-			    }
+				name: {
+					first: self.data.me.first_name,
+					last: self.data.me.last_name
+				},
+				username: {
+					email: self.data.me.email,
+					uid: self.data.me.id,
+					type: 'facebook'
+				},
+				image: {
+					original: self.data.me.picture.data.url,
+					thumb: self.data.me.picture.data.url 
+				}
 			};
 
 			return $.ajax({
@@ -218,14 +257,27 @@ if ( typeof Object.create !== 'function' ) {
 		},
 
 		render: function(hash) {
+			var self = this;
 			var temp = hash.split('/')[0];
 
 			var	map = {
 				'#welcome': function() {
+
 					var el = $('div.page-container');
 
-					el.fadeIn(500);
-					el.find('.welcome').delay(500).slideDown(500);
+					el.prepend(self.templates.welcome).fadeIn(500);
+					el.find('div.welcome').animate({
+						height: '230px'
+					}, 1000)
+					.delay(1000).animate({
+						marginLeft: '-1500px'
+					}, 1000, function() {
+						this.remove();
+					}).promise().then(function() {
+						$('div.welcome-questions').animate({
+							right: '0'
+						}, 2000);
+					});
 				}
 			}
 

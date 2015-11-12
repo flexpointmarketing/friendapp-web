@@ -9,6 +9,7 @@ var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
 var uuid = require('uuid');
 var engines = require('consolidate');
+var cors = require('cors');
 
 /**
  * MongoDB Connection
@@ -16,6 +17,10 @@ var engines = require('consolidate');
 var db = mongoose.connect('mongodb://localhost/stea_friendapp');
 
 var app = express();
+app.use(cors({
+	credentials: true,
+	origin: true
+}));
 
 app.set('port', process.env.PORT || 3000);
 

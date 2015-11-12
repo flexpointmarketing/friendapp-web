@@ -9,9 +9,10 @@ $(document).on('ready', function() {
 		version: 'v2.4'
 	});
 	
+	window.location.hash = "#starting";
+	$.publish( 'friendapp/gameLoaderOn');
+
 	FB.Event.subscribe('auth.authResponseChange', onAuthResponseChange);
 	FB.Event.subscribe('auth.statusChange', onStatusChange);
-
-	$.publish( 'friendapp/gameLoaderOn');
 });
 

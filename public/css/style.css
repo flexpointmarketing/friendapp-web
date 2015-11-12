@@ -182,7 +182,6 @@ div.welcome {
     position: relative;
     top: 10%;
     height: 0;
-    display: none;
     overflow: hidden;
 }
 
@@ -199,4 +198,13 @@ div.welcome h1, div.welcome p {
     width: 80%;
     margin: 20px auto;
     text-transform: uppercase;
+}
+
+div.welcome-questions {
+    height: 100%;
+    max-height: 400px;
+    position: absolute;
+    width: 100%;
+    top: 10%;
+    right: -760px;
 }
