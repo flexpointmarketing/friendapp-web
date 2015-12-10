@@ -23,8 +23,6 @@ if ( typeof Object.create !== 'function' ) {
 (function($, window, document, undefined) {
 	var FriendApp = {
 		init: function(data) {
-			console.log(data);
-
 			var self = this;
 			self.data = data; // data from FB api
 			self.uData = {}; // init user data object
@@ -32,11 +30,11 @@ if ( typeof Object.create !== 'function' ) {
 			self.templates = {}; // init empty templates
 			self.baseAU = "https://stupideasygames.com/friendapp/api/web/";
 			self.appHeader = $('div.frapp-container header.header');
-			self.bindEvents();
+			self.bEvt = self.bindEvents();
+			self.bEvt.hashEvt();
 			
 			$.when(self.getTemplates(self)).then(function() {
-				console.log(self.templates);
-
+				// get Prepared Questions
 				self.getPreparedQuestions().then(function(res) {
 					self.pQuestions = res;
 					self.processData(self);
@@ -44,11 +42,48 @@ if ( typeof Object.create !== 'function' ) {
 			});
 		},
 
+		addFriendList: function(o) {
+			// Add New Friends
+			var self = this;
+			
+			return $.ajax({
+				url: self.baseAU + 'users/' + self.uData.user._id,
+				type: 'POST',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(o)
+			}).promise();
+		},
+
 		bindEvents: function() {
 			var self = this;
 
-			$(window).on('hashchange', function() {
-				self.render(window.location.hash);
+			function hashEvt() {
+				$(window).on('hashchange', function() {
+					self.render(window.location.hash);
+				});
+
+				return true;
+			}
+
+			function btnEvt(selector, evt, callback) {
+				$(selector).on(evt, callback);
+				return true;
+			}
+
+			return {
+				hashEvt: hashEvt,
+				btnEvt: btnEvt
+			}
+		},
+
+		getPreparedQuestions: function() {
+			var self = this;
+
+			return $.ajax({
+				url: self.baseAU + 'questions/prepared',
+				type: 'GET',
+				dataType: 'json'
 			});
 		},
 
@@ -71,14 +106,11 @@ if ( typeof Object.create !== 'function' ) {
 
 			function ajax2() {
 				return $.ajax({
-					url: 'public/js/templates/welcome.hbs',
+					url: 'public/js/templates/pquestions.hbs',
 					type: 'GET',
 					dataType: 'html',
 					success: function (data) {
-						var template = Handlebars.compile(data);
-						self.templates.welcome2 = template({
-							name: self.data.me.first_name
-						});
+						self.templates.pquestions = Handlebars.compile(data);
 					},
 				});
 			}
@@ -97,22 +129,18 @@ if ( typeof Object.create !== 'function' ) {
 			return async;
 		},
 
-		updateUData: function(data) {
-			return this.getUserGameData();
-		},
-
-		getPreparedQuestions: function() {
+		getUserGameData: function() {
 			var self = this;
 
 			return $.ajax({
-				url: self.baseAU + 'questions/prepared',
+				url: self.baseAU + 'users/' + self.uData.user._id,
 				type: 'GET',
 				dataType: 'json'
 			});
 		},
 
 		processData: function(self) {
-			var async = $.when(self.saveUser()).then(function(res) {
+			var async = self.saveUser().then(function(res) {
 				self.showHeaderInfo();
 				self.uData.user = res;
 			});
@@ -171,25 +199,69 @@ if ( typeof Object.create !== 'function' ) {
 			});
 		},
 
-		showHeaderInfo: function() {
+		updateFriendList: function(o) {
+			// Update friend list of friends also
 			var self = this;
 
-			var img = self.data.me.picture.data.url;
-			var profileH = self.appHeader.find('div.profile-h');
-			var avatarH = profileH.find('figure.avatar');
+			return $.ajax({
+				url: self.baseAU + 'users/' + self.uData.user._id,
+				type: 'PATCH',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(o)
+			}).promise();
+		},
 
-			$('<img></img>', {
-				src: img
-			}).appendTo(avatarH);
-			
-			$('<h4></h4>', {
-				text: self.data.me.name
-			}).appendTo(profileH);
-			
-			$('<small></small>', {
-				text: self.data.me.email
-			}).appendTo(profileH);
+		updateUData: function(data) {
+			return this.getUserGameData();
+		},
 
+		render: function(hash) {
+			var self = this;
+			var temp = hash.split('/')[0];
+
+			var	map = {
+				'#welcome': function() {
+					var x = $('div.page-container');
+					x.prepend(self.templates.welcome).fadeIn(500);
+
+					y = x.find('div.welcome');
+					y.addClass('zoom');
+
+					self.bEvt.btnEvt('#sg-btn', 'click', function() {
+						y.removeClass('zoom')
+						.addClass('unzoom')
+						.delay(500)
+						.queue(function() {
+							y.remove();
+
+							var t = self.templates.pquestions({
+								question: 'My favorite softdrink',
+								choice1: 'Mirinda',
+								choice2: 'Pepsi',
+								choice3: 'Coke',
+								choice4: 'Sprite'
+							});
+
+							x.prepend(t).fadeIn(100).queue(function() {
+								var qc = $('div.welcome-questions');
+
+								qc.addClass('scroll-left')
+								.delay(1000).queue(function() {
+									qc.addClass('scroll-bleft')
+									.delay(500).queue(function() {
+										qc.remove();
+									});
+								});
+							});
+						});
+					});
+				}
+			}
+
+			if (map[temp]) {
+				map[temp]();
+			}
 		},
 
 		saveUser: function() {
@@ -220,70 +292,24 @@ if ( typeof Object.create !== 'function' ) {
 			});
 		},
 
-		getUserGameData: function() {
+		showHeaderInfo: function() {
 			var self = this;
 
-			return $.ajax({
-				url: self.baseAU + 'users/' + self.uData.user._id,
-				type: 'GET',
-				dataType: 'json'
-			});
-		},
+			var img = self.data.me.picture.data.url;
+			var profileH = self.appHeader.find('div.profile-h');
+			var avatarH = profileH.find('figure.avatar');
 
-		addFriendList: function(o) {
-			// Add New Friends
-			var self = this;
+			$('<img></img>', {
+				src: img
+			}).appendTo(avatarH);
 			
-			return $.ajax({
-				url: self.baseAU + 'users/' + self.uData.user._id,
-				type: 'POST',
-				contentType: 'application/json',
-				dataType: 'json',
-				data: JSON.stringify(o)
-			}).promise();
-		},
-
-		updateFriendList: function(o) {
-			// Update friend list of friends also
-			var self = this;
-
-			return $.ajax({
-				url: self.baseAU + 'users/' + self.uData.user._id,
-				type: 'PATCH',
-				contentType: 'application/json',
-				dataType: 'json',
-				data: JSON.stringify(o)
-			}).promise();
-		},
-
-		render: function(hash) {
-			var self = this;
-			var temp = hash.split('/')[0];
-
-			var	map = {
-				'#welcome': function() {
-
-					var el = $('div.page-container');
-
-					el.prepend(self.templates.welcome).fadeIn(500);
-					el.find('div.welcome').animate({
-						height: '230px'
-					}, 1000)
-					.delay(1000).animate({
-						marginLeft: '-1500px'
-					}, 1000, function() {
-						this.remove();
-					}).promise().then(function() {
-						$('div.welcome-questions').animate({
-							right: '0'
-						}, 2000);
-					});
-				}
-			}
-
-			if (map[temp]) {
-				map[temp]();
-			}
+			$('<h4></h4>', {
+				text: self.data.me.name
+			}).appendTo(profileH);
+			
+			$('<small></small>', {
+				text: self.data.me.email
+			}).appendTo(profileH);
 		}
 	}
 	
