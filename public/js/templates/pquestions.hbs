@@ -1,15 +1,16 @@
 <div class="welcome-questions">
 	<div class="row">
-		<div class="col-xs-8 col-xs-offset-2">
-			<div data-id="1" class="pq-item-set">
+		<div class="qs-wrapper col-xs-8 col-xs-offset-2">
+			<div data-id="{{id}}" class="pq-item-set">
 				<div class="question">
 					<p>{{question}}</p>
 				</div>
-				<div class="choices">
-					<button>{{choice1}}</button>
-					<button>{{choice2}}</button>
-					<button>{{choice3}}</button>
-					<button>{{choice4}}</button>
+				<div class="answer">
+					<input type="text" placeholder="Your Answer" tabindex='1'>
+
+					<button class="btn btn-primary btn-lg {{btnClass}}">
+						{{btnLabel}}
+					</button>
 				</div>
 			</div>
 		</div>

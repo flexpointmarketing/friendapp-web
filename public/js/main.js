@@ -36,7 +36,15 @@ if ( typeof Object.create !== 'function' ) {
 			$.when(self.getTemplates(self)).then(function() {
 				// get Prepared Questions
 				self.getPreparedQuestions().then(function(res) {
-					self.pQuestions = res;
+					self.pQuestions = res.data;
+					self.tempQuestions = [];
+
+					for (var i = 0, j = res.data; i < 10; i++) {
+						var a = j.length;
+						var b = j.splice(Math.floor(Math.random() * a), 1);
+						self.tempQuestions.push(b[0]);
+					}
+
 					self.processData(self);
 				});
 			});
@@ -66,14 +74,30 @@ if ( typeof Object.create !== 'function' ) {
 				return true;
 			}
 
-			function btnEvt(selector, evt, callback) {
-				$(selector).on(evt, callback);
+			function btnEvt(selector, evt, callback, context) {
+				if (context !== undefined) {
+					$(context).on(evt, selector, callback);
+				} else {
+					$(selector).on(evt, callback);
+				}
+
+				return true;
+			}
+
+			function inputEvt(selector, evt, callback, context) {
+				if (context !== undefined) {
+					$(context).on(evt, selector, callback);
+				} else {
+					$(selector).on(evt, callback);
+				}
+
 				return true;
 			}
 
 			return {
 				hashEvt: hashEvt,
-				btnEvt: btnEvt
+				btnEvt: btnEvt,
+				inputEvt: inputEvt
 			}
 		},
 
@@ -85,6 +109,10 @@ if ( typeof Object.create !== 'function' ) {
 				type: 'GET',
 				dataType: 'json'
 			});
+		},
+
+		getRandomInt: function (min, max) {
+			return Math.floor(Math.random() * (max - min)) + min;
 		},
 
 		getTemplates: function(self) {
@@ -194,6 +222,7 @@ if ( typeof Object.create !== 'function' ) {
 			async4.then(function(res) {
 				console.log(self.uData);
 				console.log(self.pQuestions);
+				console.log(self.tempQuestions);
 				window.location.hash = '#welcome';
 				$.publish( 'friendapp/gameLoaderOff');
 			});
@@ -235,24 +264,86 @@ if ( typeof Object.create !== 'function' ) {
 						.queue(function() {
 							y.remove();
 
+							var z = self.tempQuestions.pop();
+
 							var t = self.templates.pquestions({
-								question: 'My favorite softdrink',
-								choice1: 'Mirinda',
-								choice2: 'Pepsi',
-								choice3: 'Coke',
-								choice4: 'Sprite'
+								id: z._id,
+								question: z.question,
+								btnLabel: 'Next',
+								btnClass: 'next'
 							});
 
-							x.prepend(t).fadeIn(100).queue(function() {
-								var qc = $('div.welcome-questions');
+							x.prepend(t).delay(100).queue(function() {
+								var qc = $('div.welcome-questions .qs-wrapper');
+								qc.addClass('scroll-left');
 
-								qc.addClass('scroll-left')
-								.delay(1000).queue(function() {
-									qc.addClass('scroll-bleft')
-									.delay(500).queue(function() {
-										qc.remove();
-									});
-								});
+								self.bEvt.inputEvt('div.answer > input', 'keydown', function(e) {
+									if (e.keyCode == 13) {
+										$('div.page-container div.answer button.btn')
+										.trigger('click');
+									}
+
+								}, 'div.page-container');
+
+								self.bEvt.btnEvt('div.answer button.next.btn', 'click', function() {
+									var qc = $('div.welcome-questions .qs-wrapper');
+									var aInput = qc.find('.answer > input');
+
+									if ($.trim(aInput.val()) === '') {
+
+										aInput.addClass('shake').delay(300).queue(function() {
+											$(this).removeClass('shake');
+											$(this).dequeue();
+										});
+
+									} else {
+										var x = $('div.page-container');
+
+										qc.addClass('scroll-bleft').delay(300).queue(function() {
+											$('div.welcome-questions').remove();
+
+											if (self.tempQuestions.length == 1) {
+												var z = self.tempQuestions.pop();
+												var btnLabel = 'Finish';
+												var btnClass = 'finish';
+
+												self.bEvt.btnEvt('div.answer .finish.btn', 'click', function() {
+													var qc = $('div.welcome-questions .qs-wrapper');
+													var aInput = qc.find('.answer > input');
+
+													if ($.trim(aInput.val()) === '') {
+														aInput.addClass('shake').delay(300).queue(function() {
+															$(this).removeClass('shake');
+															$(this).dequeue();
+														});
+													} else {
+
+													}
+												}, 'div.page-container');
+
+											} else {
+												var z = self.tempQuestions.pop();
+												var btnLabel = 'Next';
+												var btnClass = 'next';
+											}
+											
+											var t = self.templates.pquestions({
+												id: z._id,
+												question: z.question,
+												btnLabel: btnLabel,
+												btnClass: btnClass
+											});
+
+											x.prepend(t);
+
+											var qc = $('div.welcome-questions .qs-wrapper');
+											qc.addClass('scroll-left');
+
+											$(this).dequeue();
+										});
+									}
+
+								}, 'div.page-container');
 							});
 						});
 					});

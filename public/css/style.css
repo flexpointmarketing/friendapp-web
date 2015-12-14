@@ -215,6 +215,7 @@ div.welcome-questions {
 	position: absolute;
 	width: 100%;
 	top: 10%;
+	right: -760px;
 }
 
 div.welcome-questions .pq-item-set .question {
@@ -254,11 +255,33 @@ div.welcome-questions .pq-item-set .choices button {
 	text-align: center;
 	font-size: 18px;
 	margin: 5px 0;
+	background-color: #fff;
 
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-o-border-radius: 5px;
+}
+
+div.welcome-questions .pq-item-set .answer input {
+	width: 100%;
+	padding: 20px;
+	border: none;
+	border-bottom: 3px solid #ccc;
+	border-radius: 5px;
+	text-align: center;
+	font-weight: bold;
+	text-transform: capitalize;
+}
+
+div.welcome-questions .pq-item-set .answer button.btn {
+	width: 100%;
+	margin-top: 40px;
+	text-transform: uppercase;
+	font-size: 24px;
+	outline: none !important;
+	border: none;
+	background-color: #337AB7;
 }
 
 
@@ -278,7 +301,7 @@ div.welcome-questions .pq-item-set .choices button {
 	}
 	100% {
 		transform: scale(1);
-	};
+	}
 }
 
 @keyframes zoom {
@@ -296,7 +319,7 @@ div.welcome-questions .pq-item-set .choices button {
 	}
 	100% {
 		transform: scale(1);
-	};
+	}
 }
 
 @-webkit-keyframes unzoom {
@@ -315,7 +338,7 @@ div.welcome-questions .pq-item-set .choices button {
 	100% {
 		transform: scale(0);
 		display: none;
-	};
+	}
 }
 
 @keyframes unzoom {
@@ -334,81 +357,193 @@ div.welcome-questions .pq-item-set .choices button {
 	100% {
 		transform: scale(0);
 		display: none;
-	};
+	}
 }
 
 @-webkit-keyframes scroll-left {
-	0% {
-		right: -760px;
+	from {
+		-ms-transform: translateX(0%) translateZ(0);
+		-webkit-transform: translateX(0%) translateZ(0);
+		transform: translateX(0%) translateZ(0);
 	}
-	50% {
-		right: -700px;
+	to {
+		-ms-transform: translate(-760px,0);
+		-webkit-transform: translate(-760px,0);
+		transform: translate(-760px,0);
 	}
-	100% {
-		right: 0;
-		left: 0;
-	};
 }
 
 @keyframes scroll-left {
-	0% {
-		right: -760px;
+	from {
+		-ms-transform: translateX(0%) translateZ(0);
+		-webkit-transform: translateX(0%) translateZ(0);
+		transform: translateX(0%) translateZ(0);
 	}
-	50% {
-		right: -700px;
+	to {
+		-ms-transform: translateX(-760px) translateZ(0);
+		-webkit-transform: translateX(-760px) translateZ(0);
+		transform: translateX(-760px) translateZ(0);
 	}
-	100% {
-		right: 0;
-		left: 0;
-	};
 }
 
 @-webkit-keyframes scroll-bleft {
-	0% {
-		right: unset;
-		left: 0;
+	from {
+		-ms-transform: translateX(-760px) translateZ(0);
+		-webkit-transform: translateX(-760px) translateZ(0);
+		transform: translateX(-760px) translateZ(0);
 	}
-	50% {
-		left: -1400px;
+	to {
+		-ms-transform: translateX(-1500px) translateZ(0);
+		-webkit-transform: translateX(-1500px) translateZ(0);
+		transform: translateX(-1500px) translateZ(0);
 	}
-	100% {
-		left: -1500px;
-	};
 }
 
 @keyframes scroll-bleft {
-	0% {
-		right: unset;
-		left: 0;
+	from {
+		-ms-transform: translateX(-760px) translateZ(0);
+		-webkit-transform: translateX(-760px) translateZ(0);
+		transform: translateX(-760px) translateZ(0);
 	}
-	50% {
-		left: -1400px;
+	to {
+		-ms-transform: translateX(-1500px) translateZ(0);
+		-webkit-transform: translateX(-1500px) translateZ(0);
+		transform: translateX(-1500px) translateZ(0);
 	}
-	100% {
-		left: -1500px;
-	};
 }
+
+@-webkit-keyframes shake {
+	0% {
+		-ms-transform: rotate(0);
+		-webkit-transform: rotate(0);
+		transform: rotate(0);
+	}
+
+	20% {
+		-ms-transform: rotate(3deg);
+		-webkit-transform: rotate(3deg);
+		transform: rotate(3deg);
+	}
+
+	40% {
+		-ms-transform: rotate(-6deg);
+		-webkit-transform: rotate(-6deg);
+		transform: rotate(-6deg);
+	}
+
+	60% {
+		-ms-transform: rotate(6deg);
+		-webkit-transform: rotate(6deg);
+		transform: rotate(6deg);
+	}
+
+	80% {
+		-ms-transform: rotate(-6deg);
+		-webkit-transform: rotate(-6deg);
+		transform: rotate(-6deg);
+	}
+
+	100% {
+		-ms-transform: rotate(0);
+		-webkit-transform: rotate(0);
+		transform: rotate(0);
+	}
+}
+
+@keyframes shake {
+	0% {
+		-ms-transform: rotate(0);
+		-webkit-transform: rotate(0);
+		transform: rotate(0);
+	}
+
+	20% {
+		-ms-transform: rotate(3deg);
+		-webkit-transform: rotate(3deg);
+		transform: rotate(3deg);
+	}
+
+	40% {
+		-ms-transform: rotate(-6deg);
+		-webkit-transform: rotate(-6deg);
+		transform: rotate(-6deg);
+	}
+
+	60% {
+		-ms-transform: rotate(6deg);
+		-webkit-transform: rotate(6deg);
+		transform: rotate(6deg);
+	}
+
+	80% {
+		-ms-transform: rotate(-6deg);
+		-webkit-transform: rotate(-6deg);
+		transform: rotate(-6deg);
+	}
+
+	100% {
+		-ms-transform: rotate(0);
+		-webkit-transform: rotate(0);
+		transform: rotate(0);
+	}
+}
+
+/*.zoom, .unzoom,
+.scroll-left, .scroll-bleft,
+.scroll-right, .scroll-bright {
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+}*/
 
 .zoom {
 	-webkit-animation: zoom 1s linear;
 	animation: zoom 1s linear;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
 }
 
 .unzoom {
 	-webkit-animation: unzoom 0.5s linear;
 	animation: unzoom 0.5s linear;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
 }
 
 .scroll-left {
-	-webkit-animation: scroll-left 0.5s linear;
-	animation: scroll-left 0.5s linear;
+	-webkit-animation: scroll-left 0.2s linear;
+	animation: scroll-left 0.2s linear;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
 }
 
 .scroll-bleft {
-	-webkit-animation: scroll-bleft 0.5s linear;
-	animation: scroll-bleft 0.5s linear;
+	-webkit-animation: scroll-bleft 0.2s linear;
+	animation: scroll-bleft 0.2s linear;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
 }
 
-.scroll-right {
-	left: 0;
+.shake {
+	-webkit-animation: shake 0.3s linear;
+	animation: shake 0.3s linear;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	-ms-animation-fill-mode: forwards;
+	-o-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
 }
