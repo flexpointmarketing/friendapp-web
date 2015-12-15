@@ -98,7 +98,7 @@ var routes = function(Users, GameData) {
 			o.uid = req.user.username.uid;
 			
 			o.friends.forEach(function(value) {
-				Users.findOne({ 'username.uid': value }, '_id', function(err, user){
+				Users.findOne({ 'username.uid': value }, '_id', function(err, user) {
 					if (user) {
 						var x = {};
 						x.fbid = o.uid;

@@ -38,12 +38,7 @@ if ( typeof Object.create !== 'function' ) {
 				self.getPreparedQuestions().then(function(res) {
 					self.pQuestions = res.data;
 					self.tempQuestions = [];
-
-					for (var i = 0, j = res.data; i < 10; i++) {
-						var a = j.length;
-						var b = j.splice(Math.floor(Math.random() * a), 1);
-						self.tempQuestions.push(b[0]);
-					}
+					self.tempAnswered = {};
 
 					self.processData(self);
 				});
@@ -178,8 +173,7 @@ if ( typeof Object.create !== 'function' ) {
 			});
 
 			var async3 = async2.then(function(res) {
-				if (res.list_of_friends.length < 1 &&
-					self.data.friends.length > 0) {
+				if (res.list_of_friends.length < 1 && self.data.friends.length > 0) {
 
 					var x = {};
 					x.friends = [];
@@ -200,8 +194,7 @@ if ( typeof Object.create !== 'function' ) {
 			var async4 = async3.then(function(res) {
 				self.uData.gameData = res;
 
-				if (res.list_of_friends.length < 1 &&
-					self.data.friends.length > 0) {
+				if (res.list_of_friends.length < 1 && self.data.friends.length > 0) {
 
 					var x = {};
 					x.friends = [];
@@ -221,36 +214,26 @@ if ( typeof Object.create !== 'function' ) {
 
 			async4.then(function(res) {
 				console.log(self.uData);
-				console.log(self.pQuestions);
-				console.log(self.tempQuestions);
 				window.location.hash = '#welcome';
 				$.publish( 'friendapp/gameLoaderOff');
 			});
-		},
-
-		updateFriendList: function(o) {
-			// Update friend list of friends also
-			var self = this;
-
-			return $.ajax({
-				url: self.baseAU + 'users/' + self.uData.user._id,
-				type: 'PATCH',
-				contentType: 'application/json',
-				dataType: 'json',
-				data: JSON.stringify(o)
-			}).promise();
-		},
-
-		updateUData: function(data) {
-			return this.getUserGameData();
 		},
 
 		render: function(hash) {
 			var self = this;
 			var temp = hash.split('/')[0];
 
-			var	map = {
+			var map = {
+				// start of welcome hash
 				'#welcome': function() {
+					self.tempAnswered.questions = [];
+
+					for (var i = 0, j = self.pQuestions; i < 10; i++) {
+						var a = j.length;
+						var b = j.splice(Math.floor(Math.random() * a), 1);
+						self.tempQuestions.push(b[0]);
+					}
+
 					var x = $('div.page-container');
 					x.prepend(self.templates.welcome).fadeIn(500);
 
@@ -277,6 +260,16 @@ if ( typeof Object.create !== 'function' ) {
 								var qc = $('div.welcome-questions .qs-wrapper');
 								qc.addClass('scroll-left');
 
+								function pushQuestion() {
+									// push question item
+									var o = {
+										qid: $('div.pq-item-set').data('id'),
+										answer: $('div.answer > input').val()
+									};
+									self.tempAnswered.questions.push(o);
+								}
+
+								// trigger click event on enter
 								self.bEvt.inputEvt('div.answer > input', 'keydown', function(e) {
 									if (e.keyCode == 13) {
 										$('div.page-container div.answer button.btn')
@@ -285,6 +278,7 @@ if ( typeof Object.create !== 'function' ) {
 
 								}, 'div.page-container');
 
+								// Add next button event
 								self.bEvt.btnEvt('div.answer button.next.btn', 'click', function() {
 									var qc = $('div.welcome-questions .qs-wrapper');
 									var aInput = qc.find('.answer > input');
@@ -298,6 +292,7 @@ if ( typeof Object.create !== 'function' ) {
 
 									} else {
 										var x = $('div.page-container');
+										pushQuestion();
 
 										qc.addClass('scroll-bleft').delay(300).queue(function() {
 											$('div.welcome-questions').remove();
@@ -307,19 +302,55 @@ if ( typeof Object.create !== 'function' ) {
 												var btnLabel = 'Finish';
 												var btnClass = 'finish';
 
-												self.bEvt.btnEvt('div.answer .finish.btn', 'click', function() {
+												// submit prepared questions
+												var spq = function() {
+													function xhr() {
+														var url = self.baseAU + 'game-data/questions/prepared';
+														self.tempAnswered.uid = self.uData.user._id;
+
+														var data = JSON.stringify(self.tempAnswered);
+
+														return $.ajax({
+															url: url,
+															type: 'PATCH',
+															contentType: 'application/json',
+															dataType: 'json',
+															data: data
+														}).promise();
+													}
+
 													var qc = $('div.welcome-questions .qs-wrapper');
 													var aInput = qc.find('.answer > input');
 
 													if ($.trim(aInput.val()) === '') {
-														aInput.addClass('shake').delay(300).queue(function() {
+														aInput.addClass('shake').delay(300)
+														.queue(function() {
 															$(this).removeClass('shake');
 															$(this).dequeue();
 														});
 													} else {
+														pushQuestion();
 
+														xhr().then(function(res) {
+															self.uData.gameData.questions.prepared = res;
+
+															$.publish('friendapp/gameLoaderOn');
+															$('div.page-container').fadeOut(500)
+															.delay(500).queue(function() {
+																$(this).html('');
+																$(this).dequeue();
+
+																window.location.hash = '#dashboard';
+															});
+															
+															console.log(self.uData);
+														});
 													}
-												}, 'div.page-container');
+												};
+
+												// add event on after answering all prepared questions
+												self.bEvt.btnEvt('div.answer .finish.btn',
+													'click', spq, 'div.page-container');
 
 											} else {
 												var z = self.tempQuestions.pop();
@@ -344,9 +375,20 @@ if ( typeof Object.create !== 'function' ) {
 									}
 
 								}, 'div.page-container');
+
+								$(this).dequeue();
 							});
+
+							$(this).dequeue();
 						});
 					});
+				},
+				// End of welcome hash
+				
+				// Start of dashboard hash
+				'#dashboard': function() {
+					$.publish('friendapp/gameLoaderOff');
+					$('div.page-container').fadeIn(500);
 				}
 			}
 
@@ -401,6 +443,23 @@ if ( typeof Object.create !== 'function' ) {
 			$('<small></small>', {
 				text: self.data.me.email
 			}).appendTo(profileH);
+		},
+
+		updateFriendList: function(o) {
+			// Update friend list of friends also
+			var self = this;
+
+			return $.ajax({
+				url: self.baseAU + 'users/' + self.uData.user._id,
+				type: 'PATCH',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(o)
+			}).promise();
+		},
+
+		updateUData: function(data) {
+			return this.getUserGameData();
 		}
 	}
 	

@@ -73,6 +73,7 @@ var GameData = require('./models/game-data');
 var routes = require('./routes/index')(Users);
 var webApiUsersRoutes = require('./routes/api/web/users')(Users, GameData);
 var webApiQuestionsRoutes = require('./routes/api/web/questions')(Questions);
+var webApiGameDataRoutes = require('./routes/api/web/game-data')(Users, GameData);
 
 var iosApiUsersRoutes = require('./routes/api/ios/users')(Users, GameData);
 var iosApiQuestionsRoutes = require('./routes/api/ios/questions')(Questions);
@@ -84,6 +85,7 @@ app.use('/', routes);
 // Web
 app.use('/api/web/users', webApiUsersRoutes);
 app.use('/api/web/questions', webApiQuestionsRoutes);
+app.use('/api/web/game-data', webApiGameDataRoutes);
 
 // IOS
 app.use('/api/ios/users', iosApiUsersRoutes);

@@ -181,7 +181,7 @@ section.main-container section.master-content div.page-container {
 div.welcome {
 	position: relative;
 	top: 10%;
-	height: 400px;
+	height: 420px;
 	overflow: hidden;
 }
 
@@ -196,6 +196,7 @@ div.welcome p {
 	text-transform: none;
 	line-height: 1.4em;
 	margin: 30px auto 20px;
+	font-family: sans-serif, arial;
 }
 
 div.welcome h1, div.welcome p {
