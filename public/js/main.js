@@ -138,7 +138,18 @@ if ( typeof Object.create !== 'function' ) {
 				});
 			}
 
-			return $.when(ajax1(), ajax2());
+			function ajax3() {
+				return $.ajax({
+					url: 'public/js/templates/pquestions.hbs',
+					type: 'GET',
+					dataType: 'html',
+					success: function (data) {
+						self.templates.dashboard = Handlebars.compile(data);
+					},
+				});
+			}
+
+			return $.when(ajax1(), ajax2(), ajax3());
 		},
 
 		getUData: function(data) {
@@ -214,8 +225,13 @@ if ( typeof Object.create !== 'function' ) {
 
 			async4.then(function(res) {
 				console.log(self.uData);
-				window.location.hash = '#welcome';
-				$.publish( 'friendapp/gameLoaderOff');
+
+				if (self.uData.gameData.questions.prepared.length !== 0) {
+					window.location.hash = '#dashboard';
+				} else {
+					window.location.hash = '#welcome';
+					$.publish( 'friendapp/gameLoaderOff');
+				}
 			});
 		},
 
