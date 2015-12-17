@@ -1,5 +1,5 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Droid Serif", Helvetica, Arial, sans-serif;
   background-color: #fff;
 }
 
@@ -285,6 +285,125 @@ div.welcome-questions .pq-item-set .answer button.btn {
 	background-color: #337AB7;
 }
 
+/* Dashboard */
+
+nav.stats.header-icons {
+	margin-top: 30px;
+}
+
+nav.stats.header-icons button.btn {
+	background-color: rgba(0, 0, 0, 0.3);
+	color: #FFF;
+	height: 60px;
+	padding: 10px 25px;
+	border: medium none !important;
+	margin-left: 0px;
+	outline: 0px none;
+	min-width: 100px;
+}
+
+nav.stats.header-icons button.lives-clock span.icon-heart,
+nav.stats.header-icons button.earn-coins span.icon-coin,
+nav.stats.header-icons button.rewards span.icon-rewards {
+	width: 36px;
+	height: 36px;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+nav.stats.header-icons button.lives-clock span.icon-heart {
+	background: url('../img/heart.png') no-repeat center center / cover;
+}
+
+nav.stats.header-icons button.earn-coins span.icon-coin {
+	background: url('../img/coin.png') no-repeat center center / cover;
+}
+
+nav.stats.header-icons button.rewards span.icon-rewards {
+	background: url('../img/ranking.png') no-repeat center center / cover;
+}
+
+nav.stats.header-icons button.lives-clock span.quantity.lives {
+	position: absolute;
+	top: 15px;
+	font-size: 17px;
+	left: 38px;
+}
+
+nav.stats.header-icons button.lives-clock span.full-lives,
+nav.stats.header-icons button.earn-coins span.quantity.coins,
+nav.stats.header-icons button.rewards span.quantity.rewards {
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 20px;
+	position: relative;
+	top: -10px;
+}
+
+nav.stats.header-icons button.lives-clock span.full-lives {
+	min-width: 60px;
+}
+
+nav.stats.header-icons button.btn:first-child {
+    border-right: 1px solid rgb(95, 122, 158) !important;
+}
+
+nav.stats.header-icons button.btn:last-child {
+    border-left: 1px solid rgb(95, 122, 158) !important;
+}
+
+div.body-btn-group-nav {
+	margin-top: 40px;
+}
+
+div.body-btn-group-nav div button.btn {
+	background-color: #337CFF;
+	color: rgb(255, 255, 255);
+	min-width: 300px;
+	margin: 10px 0px;
+	height: 60px;
+	border: none;
+	border-bottom: 4px solid #153D9E;
+	letter-spacing: 1px;
+}
+
+div.body-recent-activities {
+	margin-top: 30px;
+}
+
+div.body-recent-activities ul.nav-tabs {
+	background-color: #337CFF;
+	border-radius: 10px 10px 0px 0px;
+	border-bottom: none;
+}
+
+div.body-recent-activities ul.nav-tabs li {
+	margin-bottom: 0;
+}
+
+div.body-recent-activities ul.nav-tabs li a {
+	outline: 0px none;
+	border: medium none !important;
+	margin-bottom: 0px;
+	font-weight: bold;
+	color: #fff;
+	letter-spacing: 1px;
+	border-radius: 0px;
+	background-color: transparent;
+}
+
+div.body-recent-activities .tab-content {
+	box-shadow: 0px 3px 2px #151E35;
+	border-radius: 0px 0px 10px 10px;
+	padding: 10px 20px;
+	background-color: #FFF;
+}
+
+div.body-recent-activities .tab-content #recent-activities {
+	border-radius: 0px 0px 10px 10px;
+	text-align: left;
+	height: 220px;
+}
 
 /* Animations */
 @-webkit-keyframes zoom {

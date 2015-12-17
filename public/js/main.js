@@ -140,7 +140,7 @@ if ( typeof Object.create !== 'function' ) {
 
 			function ajax3() {
 				return $.ajax({
-					url: 'public/js/templates/pquestions.hbs',
+					url: 'public/js/templates/dashboard.hbs',
 					type: 'GET',
 					dataType: 'html',
 					success: function (data) {
@@ -403,8 +403,18 @@ if ( typeof Object.create !== 'function' ) {
 				
 				// Start of dashboard hash
 				'#dashboard': function() {
-					$.publish('friendapp/gameLoaderOff');
-					$('div.page-container').fadeIn(500);
+					var x = $('div.page-container');
+
+					var t = self.templates.dashboard({
+						lives: 5,
+						coins: 0
+					});
+
+					x.prepend(t).delay(100).queue(function() {
+						$.publish('friendapp/gameLoaderOff');
+						$('div.page-container').fadeIn(500);
+						$(this).dequeue();
+					});
 				}
 			}
 
